@@ -1,19 +1,11 @@
 import { Component } from 'react';
 import './App.css';
-import Menu from './Components/MenuComponent';
-import { DISHES } from './shared/dishes';
-
-class App extends Component {  
-  constructor(props) {
-        super(props);
-        this.state = {
-            dishes: DISHES
-        };
-  }
+import Main from './Components/MainComponent';
+class App extends Component {
 
   render () {
     return (
-      <Menu dishes={this.state.dishes}/>
+      <Main />
     );
   }
 }

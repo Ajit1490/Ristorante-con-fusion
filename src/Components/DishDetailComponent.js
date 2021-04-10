@@ -31,7 +31,7 @@ class DishDetail extends Component {
                       <CardTitle ><h4>Comments</h4></CardTitle>
                         <CardText>
                             <ul className="list-unstyled">
-                                {dish.comments.map((c) => <li>{c.comment}<br/>--{c.author}, {c.date}<br/><br /></li>)}
+                                {dish.comments.map((c) => <li>{c.comment}<br/>--{c.author}, {new Intl.DateTimeFormat('en-US', { year: 'numeric', month: 'short', day: '2-digit'}).format(new Date(Date.parse(c.date)))}<br/><br /></li>)}
                             </ul>
                         </CardText>
                     </CardBody>
@@ -45,12 +45,14 @@ class DishDetail extends Component {
 
     render() {
         return (
-            <div className="row">
-                <div  className="col-12 col-md-5 m-1">
-                    {this.renderDish(this.props.selectedDish)}
-                </div>
-                <div  className="col-12 col-md-5 m-1">
-                    {this.renderComments(this.props.selectedDish)}
+            <div className="container">
+                <div className="row">
+                    <div  className="col-12 col-md-5 m-1">
+                        {this.renderDish(this.props.selectedDish)}
+                    </div>
+                    <div  className="col-12 col-md-5 m-1">
+                        {this.renderComments(this.props.selectedDish)}
+                    </div>
                 </div>
             </div>
         );

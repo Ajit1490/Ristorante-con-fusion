@@ -10,6 +10,7 @@ import Header from './HeaderComponent';
 import Footer from './FooterComponent';
 import DishDetail from './DishDetailComponent';
 import { Switch, Route, Redirect } from 'react-router-dom';
+import About from './AboutComponent';
 
 class Main extends Component {
 
@@ -23,10 +24,6 @@ class Main extends Component {
             leaders: LEADERS
         };
     };
-
-    // onDishSelect(dish) {
-    //     this.setState({ selectedDish: dish});
-    // }
 
     render () {
 
@@ -54,11 +51,10 @@ class Main extends Component {
                     <Route path='/home' component={HomePage} />
                     <Route exact path='/menu' component={() => <Menu dishes={this.state.dishes} />} />
                     <Route exact path='/contactus' component={Contact} />} />
+                    <Route exact path='/aboutus' component={() => <About leaders={this.state.leaders}/>} />
                     <Route path='/menu/:dishId' component={DishWithId} />
                     <Redirect to="/home" />
                 </Switch>
-                {/* <Menu dishes={this.state.dishes} onClick={(dishId) => this.onDishSelect(dishId)}/> */}
-                {/* <DishDetail selectedDish={this.state.dishes.filter((dish) => dish.id === this.state.selectedDish)[0]}/> */}
                 <Footer/>
             </div>
         );

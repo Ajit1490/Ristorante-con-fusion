@@ -20,7 +20,7 @@ function Footer(props) {
                     <address>
 		              House Number<br />
 		              Street<br />
-		              City Country<br />
+		              City, Country<br />
 		              <i className="fa fa-phone fa-lg"></i>: +xxx xxx xxx<br />
 		              <i className="fa fa-fax fa-lg"></i>: +xxx xxx xxx<br />
 		              <i className="fa fa-envelope fa-lg"></i>: <a href="">email@address</a>

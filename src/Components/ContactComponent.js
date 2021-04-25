@@ -1,104 +1,85 @@
 import React, { Component } from 'react';
-import { Breadcrumb, BreadcrumbItem, Button, Form, FormGroup, Label, Input, Col } from 'reactstrap';
-import { Link } from 'react-router-dom';
+import { Breadcrumb, BreadcrumbItem, Button, Row, Col, Label } from 'reactstrap';
+import { Control, LocalForm, Errors } from 'react-redux-form';import { Link } from 'react-router-dom';
 
 class Contact extends Component {
 
     constructor(props) {
         super(props);
 
-        this.state = {
-            firstname: '',
-            lastname: '',
-            telnum: '',
-            email: '',
-            agree: false,
-            contactType: 'Tel.',
-            message: ''
-        };
-
-        this.handleInputChange = this.handleInputChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
         this.contactUsForm = this.contactUsForm.bind(this);
     }
 
-    handleInputChange(event) {
-        const target = event.target;
-        const value = target.type === 'checkbox' ? target.checked : target.value;
-        const name = target.name;
-
-        this.setState({
-          [name]: value
-        });
+    handleSubmit(values) {
+        console.log('Current State is: ' + JSON.stringify(values));
+        alert('Current State is: ' + JSON.stringify(values));
+        // event.preventDefault();
     }
 
-    handleSubmit(event) {
-        console.log('Current State is: ' + JSON.stringify(this.state));
-        alert('Current State is: ' + JSON.stringify(this.state));
-        event.preventDefault();
-    }
-
-    renderFormGroup(ipType, stateName, labelText) {
+    renderFormGroup(ipType, stateName, labelText, modelName) {
         return (
-            <FormGroup row>
-                <Label htmlFor={stateName} md={2}>
-                    {labelText}
-                </Label>
+            <Row className='form-group'>
+                <Label htmlFor={stateName} md={2}> {labelText} </Label>
 
                 <Col md={10}>
-                    <Input type={ipType} id={stateName} name={stateName}
-                        rows={ipType === 'textarea' ? '12' : '1'}
-                        placeholder={labelText} value={this.state[stateName]}
-                        onChange={this.handleInputChange} />
+                    {ipType === 'textarea' 
+                        ? 
+                        <Control.textarea model={modelName} id={stateName} name={stateName}
+                            rows={ipType === 'textarea' ? '12' : '1'}
+                            placeholder={labelText} className="form-control"/>
+                        :
+                        <Control.text model={modelName} id={stateName} name={stateName}
+                            rows={ipType === 'textarea' ? '12' : '1'}
+                            placeholder={labelText} className="form-control"/>
+                    }
                 </Col>
-            </FormGroup>
+            </Row>
         );
     }
 
     renderAgreementCheck() {
         return (
-            <FormGroup row>
+            <Row className="form-group">
                 <Col md={{size: 6, offset: 2}}>
-                    <FormGroup check>
+                    <div className="form-check">
                         <Label check>
-                            <Input type="checkbox"
-                                name="agree"
-                                checked={this.state.agree}
-                                onChange={this.handleInputChange} /> {' '}
+                            <Control.checkbox model=".agree"
+                                name="agree" className="form-check-input" />
+                            {' '}
                             <strong>May we contact you?</strong>
                         </Label>
-                    </FormGroup>
+                    </div>
                 </Col>
                 <Col md={{size: 3, offset: 1}}>
-                    <Input type="select" name="contactType"
-                            value={this.state.contactType}
-                            onChange={this.handleInputChange}>
+                    <Control.select model=".contactType" name="contactType"
+                            className="form-control">
                         <option>Tel.</option>
                         <option>Email</option>
-                    </Input>
+                    </Control.select>
                 </Col>
-            </FormGroup>
+            </Row>
         );
     }
 
     contactUsForm() {
         return(
-            <Form onSubmit={this.handleSubmit}>
-                {this.renderFormGroup('text', 'firstname', 'First Name')}
-                {this.renderFormGroup('text', 'lastname', 'Last Name')}
-                {this.renderFormGroup('tel', 'telnum', 'Tel. Number')}
-                {this.renderFormGroup('email', 'email', 'Email')}
+            <LocalForm onSubmit={(values) => this.handleSubmit(values)}>
+                {this.renderFormGroup('text', 'firstname', 'First Name', '.firstname')}
+                {this.renderFormGroup('text', 'lastname', 'Last Name', '.lastname')}
+                {this.renderFormGroup('tel', 'telnum', 'Tel. Number', '.telnum')}
+                {this.renderFormGroup('email', 'email', 'Email', '.email')}
 
                 {this.renderAgreementCheck()}
 
-                {this.renderFormGroup('textarea', 'message', 'Your Feedback')}
+                {this.renderFormGroup('textarea', 'message', 'Your Feedback', '.message')}
 
-                <FormGroup row>
+                <Row className="form-group">
                     <Col md={{size:10, offset: 2}}>
                         <Button type="submit" color="primary"> Send Feedback </Button>
                     </Col>
-                </FormGroup>
-            </Form>
+                </Row>
+            </LocalForm>
         );
     }
 

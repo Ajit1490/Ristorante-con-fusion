@@ -2,6 +2,12 @@ import React, { Component } from 'react';
 import { Breadcrumb, BreadcrumbItem, Button, Row, Col, Label } from 'reactstrap';
 import { Control, LocalForm, Errors } from 'react-redux-form';import { Link } from 'react-router-dom';
 
+const required = (val) => val && val.length;
+const maxLength = (len) => (val) => !(val) || (val.length <= len);
+const minLength = (len) => (val) => val && (val.length >= len);
+const isNumber = (val) => !isNaN(Number(val));
+const validEmail = (val) => /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(val);
+
 class Contact extends Component {
 
     constructor(props) {
@@ -17,7 +23,7 @@ class Contact extends Component {
         // event.preventDefault();
     }
 
-    renderFormGroup(ipType, stateName, labelText, modelName) {
+    renderFormGroup(ipType, stateName, labelText, modelName, validators, minLength, maxLength) {
         return (
             <Row className='form-group'>
                 <Label htmlFor={stateName} md={2}> {labelText} </Label>
@@ -26,13 +32,26 @@ class Contact extends Component {
                     {ipType === 'textarea' 
                         ? 
                         <Control.textarea model={modelName} id={stateName} name={stateName}
-                            rows={ipType === 'textarea' ? '12' : '1'}
+                            rows="12"
+                            validators={{validators}}
                             placeholder={labelText} className="form-control"/>
                         :
                         <Control.text model={modelName} id={stateName} name={stateName}
-                            rows={ipType === 'textarea' ? '12' : '1'}
+                            rows="1"
+                            validators={{validators}}
                             placeholder={labelText} className="form-control"/>
                     }
+                    <Errors className="text-danger"
+                        model={modelName}
+                        show="touched"
+                        messages={{
+                            required: 'Required. ',
+                            isNumber: "Must be a Number. ",
+                            minLength: minLength == maxLength ? `Must be ${maxLength} characters. ` : `Must not be less than ${minLength} characters. `,
+                            maxLength: minLength == maxLength ? `Must be ${maxLength} characters. ` : `Must be ${maxLength} characters or less. `,
+                            validEmail: "Invalid Email address. "
+                        }}
+                        />
                 </Col>
             </Row>
         );
@@ -63,16 +82,22 @@ class Contact extends Component {
     }
 
     contactUsForm() {
+
         return(
             <LocalForm onSubmit={(values) => this.handleSubmit(values)}>
-                {this.renderFormGroup('text', 'firstname', 'First Name', '.firstname')}
-                {this.renderFormGroup('text', 'lastname', 'Last Name', '.lastname')}
-                {this.renderFormGroup('tel', 'telnum', 'Tel. Number', '.telnum')}
-                {this.renderFormGroup('email', 'email', 'Email', '.email')}
+                {this.renderFormGroup('text', 'firstname', 'First Name', '.firstname',
+                    {required, minLength: minLength(3), maxLength: maxLength(15)}, 3, 15 )}
+                {this.renderFormGroup('text', 'lastname', 'Last Name', '.lastname',
+                    {required, minLength: minLength(3), maxLength: maxLength(15)}, 3, 15 )}
+                {this.renderFormGroup('tel', 'telnum', 'Tel. Number', '.telnum',
+                    {required, minLength: minLength(10), maxLength: maxLength(10), isNumber}, 10, 10 )}
+                {this.renderFormGroup('email', 'email', 'Email', '.email',
+                    {required, validEmail } )}
 
                 {this.renderAgreementCheck()}
 
-                {this.renderFormGroup('textarea', 'message', 'Your Feedback', '.message')}
+                {this.renderFormGroup('textarea', 'message', 'Your Feedback', '.message',
+                    {required, minLength: minLength(10), maxLength: maxLength(50)}, 10, 50)}
 
                 <Row className="form-group">
                     <Col md={{size:10, offset: 2}}>

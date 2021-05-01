@@ -1,5 +1,12 @@
 import { Card, CardImg, CardText, CardBody, CardTitle, Breadcrumb, BreadcrumbItem } from 'reactstrap';
 import { Link } from 'react-router-dom';
+import { Component } from "react";
+import { Button, Modal, ModalHeader, ModalBody, Col, Row, Label } from 'reactstrap';
+import { Control, LocalForm, Errors } from 'react-redux-form';
+
+const required = (val) => val && val.length;
+const maxLength = (len) => (val) => !(val) || (val.length <= len);
+const minLength = (len) => (val) => val && (val.length >= len);
 
 function RenderDish(dish) {
     if (dish != null)
@@ -23,11 +30,12 @@ function RenderComments (comments) {
         return(
             <Card>
                 <CardBody>
-                    <CardTitle ><h4>Comments</h4></CardTitle>
+                    <CardTitle><h4>Comments</h4></CardTitle>
                     <CardText>
                         <ul className="list-unstyled">
                             {comments.map((c) => <li>{c.comment}<br/>--{c.author}, {new Intl.DateTimeFormat('en-US', { year: 'numeric', month: 'short', day: '2-digit'}).format(new Date(Date.parse(c.date)))}<br/><br /></li>)}
                         </ul>
+                        <CommentForm/>
                     </CardText>
                 </CardBody>
             </Card>
@@ -63,5 +71,102 @@ const DishDetail = (props) => {
     );
 }
 
+class CommentForm extends Component {
+
+    constructor(props) {
+        super(props);
+    
+        this.state = {
+          isModalOpen: false
+        };
+
+        this.toggleModal = this.toggleModal.bind(this);
+        this.handleSubmit = this.handleSubmit.bind(this);
+    }
+
+    toggleModal() {
+        this.setState({
+          isModalOpen: !this.state.isModalOpen
+        });
+    }
+
+    handleSubmit(values) {
+        this.toggleModal();
+        alert("Submit feedback Clicked");
+        //event.preventDefault();
+    }
+
+    commentForm() {
+        return (
+            <div>
+                <LocalForm onSubmit={(values) => this.handleSubmit(values)}>
+                    <Row className="form-group">
+                        <Label htmlFor="rating" md={12}>Rating</Label>
+                        <Col md={{size: 12}}>
+                            <Control.select model=".rating" name="rating" className="form-control"
+                                innerRef={(input) => this.rating = input}>
+                                <option>1</option>
+                                <option>2</option>
+                                <option>3</option>
+                                <option>4</option>
+                                <option>5</option>
+                            </Control.select>
+                        </Col>
+                    </Row>
+                    <Row className="form-group">
+                        <Label htmlFor="yourname" md={12}>Your Name</Label>
+                        <Col md={{size: 12}}>
+                            <Control.text model=".yourname" name="yourname"
+                                className="form-control" validators={{required, minLength: minLength(2), maxLength: maxLength(15)}}
+                                innerRef={(input) => this.yourname = input}  />
+                            <Errors className="text-danger" model=".yourname" show="touched"
+                                messages={{
+                                    required: 'Required. ',
+                                    minLength: `Must be greater than 2 characters. `,
+                                    maxLength: `Must be 15 characters or less. `,
+                                }}
+                            />
+                        </Col>
+                    </Row>
+                    <Row className="form-group">
+                        <Label htmlFor="comment" md={12}>Comment</Label>
+                        <Col md={{size: 12}}>
+                            <Control.textarea model=".comment" name="comment" rows="6"
+                                    className="form-control" validators={{required, minLength: minLength(5), maxLength: maxLength(100)}}
+                                    innerRef={(input) => this.comment = input}  />
+                            <Errors className="text-danger" model=".comment" show="touched"
+                                messages={{
+                                    required: 'Required. ',
+                                    minLength: `Must be greater than 5 characters. `,
+                                    maxLength: `Must be 100 characters or less. `,
+                                }}
+                            />
+                        </Col>
+                    </Row>
+                    <Button type="submit" value="submit" color="primary">Submit</Button>
+                </LocalForm>
+            </div>
+        );
+    }
+
+    render() {
+        return(
+            <div>
+                <Modal isOpen={this.state.isModalOpen} toggle={this.toggleModal}>
+                    <ModalHeader toggle={this.toggleModal}>Submit Comment</ModalHeader>
+                    <ModalBody>
+                        <div className="col-12">
+                            {this.commentForm()}
+                        </div>
+                    </ModalBody>
+                </Modal>
+
+                <Button outline onClick={this.toggleModal}>
+                    <span className="fa fa-pencil">Submit Comment</span>
+                </Button>
+            </div>
+        );
+    }
+}
 
 export default DishDetail;

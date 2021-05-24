@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Breadcrumb, BreadcrumbItem, Button, Row, Col, Label } from 'reactstrap';
-import { Control, LocalForm, Errors } from 'react-redux-form';
+import { Control, Form, Errors } from 'react-redux-form';
 import { Link } from 'react-router-dom';
 
 const required = (val) => val && val.length;
@@ -21,10 +21,11 @@ class Contact extends Component {
     handleSubmit(values) {
         console.log('Current State is: ' + JSON.stringify(values));
         alert('Current State is: ' + JSON.stringify(values));
-        // event.preventDefault();
+        this.props.resetFeedbackForm();
     }
 
     renderFormGroup(ipType, stateName, labelText, modelName, validators, minLength, maxLength) {
+
         return (
             <Row className='form-group'>
                 <Label htmlFor={stateName} md={2}> {labelText} </Label>
@@ -34,14 +35,14 @@ class Contact extends Component {
                         ? 
                         <Control.textarea model={modelName} id={stateName} name={stateName}
                             rows="12"
-                            validators={{validators}}
+                            validators={validators}
                             placeholder={labelText} className="form-control"/>
                         :
                         <Control.text model={modelName} id={stateName} name={stateName}
                             rows="1"
-                            validators={{validators}}
-                            placeholder={labelText} className="form-control"/>
-                    }
+                            validators={validators}
+                            placeholder={labelText} className="form-control"/>}
+
                     <Errors className="text-danger"
                         model={modelName}
                         show="touched"
@@ -85,7 +86,8 @@ class Contact extends Component {
     contactUsForm() {
 
         return(
-            <LocalForm onSubmit={(values) => this.handleSubmit(values)}>
+            <Form model="feedback" onSubmit={(values) => this.handleSubmit(values)}>
+
                 {this.renderFormGroup('text', 'firstname', 'First Name', '.firstname',
                     {required, minLength: minLength(3), maxLength: maxLength(15)}, 3, 15 )}
                 {this.renderFormGroup('text', 'lastname', 'Last Name', '.lastname',
@@ -105,7 +107,7 @@ class Contact extends Component {
                         <Button type="submit" color="primary"> Send Feedback </Button>
                     </Col>
                 </Row>
-            </LocalForm>
+            </Form>
         );
     }
 
@@ -120,6 +122,14 @@ class Contact extends Component {
                     <div className="col-12">
                         <h3>Contact Us</h3>
                         <hr />
+                    </div>
+                </div>
+                <div className="row row-content">
+                    <div className="col-12">
+                        <h3>Send us your Feedback</h3>
+                    </div>
+                    <div className="col-12 col-md-9">
+                        {this.contactUsForm()}
                     </div>
                 </div>
                 <div className="row row-content">
@@ -146,14 +156,6 @@ class Contact extends Component {
                             <a role="button" className="btn btn-info"><i className="fa fa-skype"></i> Skype</a>
                             <a role="button" className="btn btn-success" href=""><i className="fa fa-envelope-o"></i> Email</a>
                         </div>
-                    </div>
-                </div>
-                <div className="row row-content">
-                    <div className="col-12">
-                        <h3>Send us your Feedback</h3>
-                    </div>
-                    <div className="col-12 col-md-9">
-                        {this.contactUsForm()}
                     </div>
                 </div>
             </div>

@@ -20,8 +20,23 @@ class Contact extends Component {
 
     handleSubmit(values) {
         console.log('Current State is: ' + JSON.stringify(values));
-        alert('Current State is: ' + JSON.stringify(values));
-        this.props.resetFeedbackForm();
+        //alert('Current State is: ' + JSON.stringify(values));
+
+        this.props.postFeedbackForm(values)
+        .then(status => {
+
+            if (status) { 
+                this.props.resetFeedbackForm();
+                alert('Your feedback is posted successfully.' + status)
+            }
+            else {
+                alert('Sorry, Your feedback could not be posted at the moment.');
+            }
+        })
+        .catch(err => {
+            console.log('Post feedback error : ' + err);
+            alert('Sorry, Your feedback could not be posted at the moment.');
+        });
     }
 
     renderFormGroup(ipType, stateName, labelText, modelName, validators, minLength, maxLength) {

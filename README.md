@@ -1,3 +1,27 @@
+# Project Structure
+
+## API
+
+### RISTORANTE-CON-FUSION/API
+
+This dorectory holds a json file that works as databse with json-server module.
+Install this module on your machine and run the command from within this directory 'json-server --watch db.json -p 3001 -d 2000' this will start a server on port 3001 with below resources:
+    
+      http://localhost:3001/dishes
+      http://localhost:3001/comments
+      http://localhost:3001/promotions
+      http://localhost:3001/leaders
+      http://localhost:3001/feedback
+
+## UI Client
+
+### RISTORANTE-CON-FUSION
+
+This directory contains single page application created using React.
+
+--------------------------------------------------------------------------------------------------
+
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).

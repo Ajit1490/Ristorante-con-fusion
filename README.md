@@ -4,7 +4,7 @@
 
 ### RISTORANTE-CON-FUSION/API
 
-This dorectory holds a json file that works as databse with json-server module.
+This directory contains a json file, that works as database with json-server module.
 Install this module on your machine and run the command from within this directory 'json-server --watch db.json -p 3001 -d 2000' this will start a server on port 3001 with below resources:
     
       http://localhost:3001/dishes
